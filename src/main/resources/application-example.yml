@@ -1,0 +1,61 @@
+# ============================================================
+# 配置模板（可安全提交到仓库，不含任何真实密钥）
+# ------------------------------------------------------------
+# 用法：复制本文件为 application.yml，然后填入你自己的真实值。
+#   或者在系统/IDE 中设置下列环境变量，由 application.yml 自动读取。
+# ============================================================
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mc_create}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    # 真实密码请通过环境变量 DB_PASSWORD 提供，不要写在这里
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # 排查 SQL 时可临时放开（会把完整结果集打印到控制台，注意刷屏）
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.mc.create: info
+
+# JWT 配置
+jwt:
+  # HS256 签名密钥，长度必须 >= 32 字节
+  # 生产环境务必设置环境变量 JWT_SECRET 为随机串，切勿使用默认值
+  secret: ${JWT_SECRET:mc-create-dev-only-insecure-secret-key-change-me-0001}
+  # 令牌有效期（秒）：2 小时
+  expire: 7200
+
+# ============================================================
+# 需要设置的环境变量一览
+# ------------------------------------------------------------
+#   DB_HOST      数据库主机，默认 localhost
+#   DB_PORT      数据库端口，默认 3306
+#   DB_NAME      数据库名，  默认 mc_create
+#   DB_USERNAME  数据库用户，默认 root
+#   DB_PASSWORD  数据库密码，必填（无默认值）
+#   JWT_SECRET   JWT 签名密钥，长度 >= 32 字节
+#
+# Windows 临时设置（仅当前终端窗口有效）：
+#   $env:DB_PASSWORD="你的密码"
+#   $env:JWT_SECRET="你的随机密钥"
+#
+# Windows 永久设置：
+#   setx DB_PASSWORD "你的密码"
+#   setx JWT_SECRET "你的随机密钥"
+#   （setx 设置后需重开终端才生效）
+#
+# IntelliJ IDEA：Run/Debug Configurations -> Environment variables
+# ============================================================
